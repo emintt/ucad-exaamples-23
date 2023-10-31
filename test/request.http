@@ -1,0 +1,57 @@
+### GET /
+
+GET http://127.0.0.1:3000/
+
+### GET /items
+GET http://127.0.0.1:3000/items
+
+### GET /items/:id
+GET http://127.0.0.1:3000/items/13
+
+### POST /items
+
+POST http://127.0.0.1:3000/items
+Content-Type: application/json
+
+{
+    "name": "tomatti"
+}
+
+### POST /items error
+
+POST http://127.0.0.1:3000/items
+Content-Type: application/json
+
+{
+    "jotain": "hihi"
+}
+
+### DELETE /items:id
+DELETE http://127.0.0.1:3000/items/13
+
+
+### PUT /items:id
+PUT http://127.0.0.1:3000/items/22
+Content-Type: : application/json
+
+{
+    "name": "porkkana"
+}
+
+
+### PUT /items:id error
+PUT http://127.0.0.1:3000/items/5
+Content-Type: : application/json
+
+{
+    "jotain": "mansikka"
+}
+
+
+### GET /items-quantity
+GET http://127.0.0.1:3000/items-quantity
+
+
+
+
+
