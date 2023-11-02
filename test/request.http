@@ -3,14 +3,14 @@
 GET http://127.0.0.1:3000/
 
 ### GET /items
-GET http://127.0.0.1:3000/items
+GET http://127.0.0.1:3000/api/items?limit=10
 
 ### GET /items/:id
-GET http://127.0.0.1:3000/items/13
+GET http://127.0.0.1:3000/api/items/13
 
 ### POST /items
 
-POST http://127.0.0.1:3000/items
+POST http://127.0.0.1:3000/api/items
 Content-Type: application/json
 
 {
@@ -19,7 +19,7 @@ Content-Type: application/json
 
 ### POST /items error
 
-POST http://127.0.0.1:3000/items
+POST http://127.0.0.1:3000/api/items
 Content-Type: application/json
 
 {
@@ -27,11 +27,11 @@ Content-Type: application/json
 }
 
 ### DELETE /items:id
-DELETE http://127.0.0.1:3000/items/13
+DELETE http://127.0.0.1:3000/api/items/22
 
 
 ### PUT /items:id
-PUT http://127.0.0.1:3000/items/22
+PUT http://127.0.0.1:3000/api/items/8
 Content-Type: : application/json
 
 {
@@ -40,7 +40,7 @@ Content-Type: : application/json
 
 
 ### PUT /items:id error
-PUT http://127.0.0.1:3000/items/5
+PUT http://127.0.0.1:3000/api/items/5
 Content-Type: : application/json
 
 {
@@ -49,7 +49,7 @@ Content-Type: : application/json
 
 
 ### GET /items-quantity
-GET http://127.0.0.1:3000/items-quantity
+GET http://127.0.0.1:3000/api/items-quantity
 
 
 
