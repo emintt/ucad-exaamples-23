@@ -1,7 +1,9 @@
 import express from 'express';
 import path from 'path';
 import {fileURLToPath} from 'url';
-import { getItemById, getItems, postItem } from './items.js';
+import { deleteItem, getItemById, getItems, getQuantity, postItem, putItem } from './items.js';
+import { deleteMediaItem, getMedia, getMediaById, postMediaItem, putMediaItem, staticMediaItem } from './media.js';
+import { deleteUser, getNumberOfUsers, getUser, getUserById, postUser, putUser } from './user.js';
 
 
 const hostname = '127.0.0.1';
@@ -16,37 +18,39 @@ app.set('views', 'src/views');
 
 // parse incoming JSON data from http requests
 app.use(express.json());
-// käsittelee, sido toiminnallisuus
-// public on juuressa kansiossa 
-// app.use(express.static('public'));
-app.use('/docs', express.static(path.join(__dirname, '../public')))
+app.use('/docs', express.static(path.join(__dirname, '../docs')))
+app.use('/media', express.static(path.join(__dirname, '../media')))
 
-
-// next: käynnistää seuraavan ..?
-// simpmle custom middleware log/debug all requests
+// simpmle custom middleware for logging/debugging all requests
 app.use((req, res, next) => {
-  console.log('Time:', req.method, req.url, Date.now());
+  console.log('Time:', Date.now(), req.method, req.url);
   next();
 });
 
+// using pug to render page
 app.get('/', (req, res) => {
-  // res.send('Welcome to my REST API!');
-  const values = {title: "Dummy RESR API docs", message: "TODO: Docs!"};
+  const values = {
+    title: "REST API docs", 
+    message: "Landing page using pug",
+    info: "Implement a REST API by following  API reference with the mock data included in it",
+    link: "https://github.com/mattpe/ucad/blob/main/assets/media-api-reference-v1.md"
+  };
   res.render('home', values);
 });
 
+app.get('/media/9626', (req, res) => {
+  const values = staticMediaItem;
+  values.file_name = staticMediaItem.filename;
+  console.log(values);
+  res.render('media-item', values);
+});
 
-
-
-
-// ei tarvitse käyttää JSON response
+// routing example
 app.get('/kukkuu', (request, response) => {
   const myResponse = {message: "Hello again"};
   response.status(400);
-  // response.json/..send: tekee lähettämistä
-  response.json(myResponse);
+  // response.json(myResponse);
   response.sendStatus(200);
-  // ..json() lähetti vastaus jo, tuo sendSatus ei ole vaikutusta, koska se tulee vastaa sen jälkeen
 });
 
 // jos kirjoittaa selaimessa ../kukkuu, tää ei toteuta vaan ylhäällä oleva koodi
@@ -56,7 +60,7 @@ app.get('/:message', (req, res) => {
   res.render('home', values);
 });
 
-// example generic icon api
+// example generic items api
 // get all items
 app.get('/api/items', getItems);
 
@@ -70,7 +74,46 @@ app.put('/api/items');
 app.post('/api/items', postItem);
 
 // delete
-app.delete('/api/items');
+app.delete('/api/items/:id', deleteItem);
+
+// put
+app.put('/api/items/:id', putItem)
+
+// get item quantity
+app.get('/api/items-quantity', getQuantity);
+
+
+// assignmnet 2
+// media endpoints
+app.get('/api/media', getMedia);
+
+// get one media item
+app.get('/api/media/:id', getMediaById);
+
+// post media item
+app.post('/api/media', postMediaItem);
+
+// modify media item
+app.put('/api/media/:id', putMediaItem);
+
+//delete media item
+app.delete('/api/media/:id', deleteMediaItem);
+
+// user endpoints
+// get all users
+app.get('/api/user', getUser);
+
+// get a user
+app.get('/api/user/:id', getUserById);
+
+// add a user
+app.post('/api/user', postUser);
+
+// modify a user
+app.put('/api/user/:id', putUser);
+
+// delete a user
+app.delete('/api/user/:id', deleteUser);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
