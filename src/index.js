@@ -2,8 +2,8 @@ import express from 'express';
 import path from 'path';
 import {fileURLToPath} from 'url';
 import { deleteItem, getItemById, getItems, getQuantity, postItem, putItem } from './items.js';
-import { deleteMediaItem, getMedia, getMediaById, postMediaItem, putMediaItem, staticMediaItem } from './media.js';
-import { deleteUser, getNumberOfUsers, getUser, getUserById, postUser, putUser } from './user.js';
+import { deleteUser, getNumberOfUsers, getUser, getUserById, postUser, putUser } from './controllers/user-controller.mjs';
+import mediaRouter from './routes/media-router.mjs';
 
 
 const hostname = '127.0.0.1';
@@ -85,19 +85,7 @@ app.get('/api/items-quantity', getQuantity);
 
 // assignmnet 2
 // media endpoints
-app.get('/api/media', getMedia);
-
-// get one media item
-app.get('/api/media/:id', getMediaById);
-
-// post media item
-app.post('/api/media', postMediaItem);
-
-// modify media item
-app.put('/api/media/:id', putMediaItem);
-
-//delete media item
-app.delete('/api/media/:id', deleteMediaItem);
+app.use('api/media', mediaRouter);
 
 // user endpoints
 // get all users
