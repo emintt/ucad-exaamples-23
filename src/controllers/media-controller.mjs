@@ -69,20 +69,21 @@ const getMediaById = (req, res) => {
 }
 
 const postMediaItem = (req, res) => {
-  console.log('request body', req.body);
+  console.log('uploaded file', req.file);
+  console.log('uploaded form datan', req.body);
+  const {title, description, user_id} = req.body;
+  const {filename, mimetype, size} = req.file;
   // check id of the last item in items and add 1   
-  const newId = mediaItems[mediaItems.length-1].media_id + 1;
-  if (req.body.user_id && req.body.filename && req.body.title && req.body.description
-    && req.body.media_type) {
-    mediaItems.push({
+  const newId = mediaItems[0].media_id + 1;
+  if (user_id && filename && title) {
+    mediaItems.unshift({
       media_id: newId, 
-      filename: req.body.filename,
-      filesize: req.body.filesize,
-      title: req.body.title,
-      description: req.body.description,
-      user_id: req.body.user_id,
-      media_type: req.body.media_type,
-      created_at: new Date(Date.now()).toISOString(),
+      filename,
+      title,
+      description,
+      user_id,
+      media_type: mimetype,
+      filesize: size
     });
     res.status(201).json({message: "New item added."});
   } else {
