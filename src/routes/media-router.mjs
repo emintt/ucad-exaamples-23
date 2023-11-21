@@ -1,6 +1,12 @@
 import express from "express";
 import multer from 'multer';
-import { deleteMediaItem, getMedia, getMediaById, postMediaItem, putMediaItem } from "../controllers/media-controller.mjs";
+import { 
+	deleteMediaItem, 
+	getMedia, 
+	getMediaById, 
+	postMediaItem, 
+	putMediaItem } 
+from "../controllers/media-controller.mjs";
 
 const mediaRouter = express.Router();
 // upload folder destination is relative to pkg.json
@@ -12,7 +18,4 @@ mediaRouter.route('/:id')
 	.get(getMediaById)
 	.put(putMediaItem)
 	.delete(deleteMediaItem);
-
-// app.delete('/api/media/:id', deleteMediaItem); -> tää on mitä meillä oli
-
 export default mediaRouter;
