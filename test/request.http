@@ -1,3 +1,19 @@
+### POST /api/auth/login
+POST http://127.0.0.1:3000/api/auth/login
+content-type: application/json
+{"username": "JohnDoe", "password": "to-be-hashed-pw1"}
+
+## auth/login
+### POST /api/auth/login
+POST http://localhost:3000/api/auth/login
+content-type: application/json
+
+{"username": "JohnDoe", "password": "to-be-hashed-pw1"}
+
+### GET my user info
+GET http://localhost:3000/api/auth/me
+Authorization: Bearer 
+
 ### GET /api/media
 GET http://127.0.0.1:3000/api/media
 

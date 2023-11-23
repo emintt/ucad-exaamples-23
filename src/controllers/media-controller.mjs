@@ -23,13 +23,29 @@ const getMediaById = async (req, res) => {
   }
 }
 
+// const postMediaItem = async(req, res) => {
+//   console.log('uploaded file', req.file);
+//   console.log('uploaded form data', req.body);
+//   const {title, description, user_id} = req.body;
+//   const {filename, mimetype, size} = req.file;
+//   // check id of the last item in items and add 1   
+//   // const newId = mediaItems[0].media_id + 1;
+//   if (user_id && filename && title) {
+//     const newMedia = [title, description, user_id, filename, mimetype, size];
+//     const result = await addMedia(newMedia);
+//     res.status(201).json({message: "New item added.", ...result});
+//   } else {
+//     res.status(400).json({message: "Missing data"});
+//   }
+// }
+
 const postMediaItem = async(req, res) => {
   console.log('uploaded file', req.file);
   console.log('uploaded form data', req.body);
-  const {title, description, user_id} = req.body;
+  const {title, description} = req.body;
   const {filename, mimetype, size} = req.file;
-  // check id of the last item in items and add 1   
-  // const newId = mediaItems[0].media_id + 1;
+  // req.user is added by authenticateToken middleware
+  const user_id = req.user.user_id;
   if (user_id && filename && title) {
     const newMedia = [title, description, user_id, filename, mimetype, size];
     const result = await addMedia(newMedia);

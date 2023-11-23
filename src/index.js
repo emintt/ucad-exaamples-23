@@ -4,6 +4,7 @@ import {fileURLToPath} from 'url';
 import mediaRouter from './routes/media-router.mjs';
 import userRouter from './routes/user-router.mjs';
 import { logger } from './middlewares/middleware.mjs';
+import authRouter from './routes/auth-router.mjs';
 
 
 const hostname = '127.0.0.1';
@@ -15,8 +16,9 @@ const __dirname = path.dirname(__filename);
 app.set('view engine', 'pug');
 app.set('views', 'src/views');
 
-// parse incoming JSON data from http requests
+// parse incomiing JSON data from http requests
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 app.use('/docs', express.static(path.join(__dirname, '../docs')));
 app.use('/media', express.static(path.join(__dirname, '../uploads')));
 
@@ -33,6 +35,9 @@ app.get('/', (req, res) => {
   };
   res.render('home', values);
 });
+
+// auth endpoints
+app.use('/api/auth', authRouter);
 
 // media endpoints
 app.use('/api/media', mediaRouter);
