@@ -1,7 +1,17 @@
-// import users from '../mock-data/users.json' assert {type:'json'};
 
+import { validationResult } from "express-validator";
 import { addUser, fetchAllUsers, fetchUser } from "../models/user-model.mjs";
 
+
+const postUser = async (req, res) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()) {
+    console.log(errors.array());
+    return res.status(400).json({message: 'invalid input fields'});
+  }
+  const newUserId = await addUser(req.body);
+  res.json({message: 'user added', user_id: newUserId});
+}
 
 const getUser = async (req, res) => {
   const users = await fetchAllUsers();
@@ -40,26 +50,26 @@ const postMediaItem = async(req, res) => {
   }
 }
 
-const postUser = async (req, res) => {
-	console.log('request body', req.body);
-  const {username, password, user_level_id, email} = req.body;
-	if (username && password && user_level_id && email) {
-    const newUser = {username, password, user_level_id, email};
-    const result = await addUser(newUser);
-    console.log('result', result);
-    if (result) {
-      if (result.error) {
-        res.status(500).json({message: "error"});
-        return;
-      } 
-      res.status(201).json({message: "New user added.", ...result});
+// const postUser = async (req, res) => {
+// 	console.log('request body', req.body);
+//   const {username, password, user_level_id, email} = req.body;
+// 	if (username && password && user_level_id && email) {
+//     const newUser = {username, password, user_level_id, email};
+//     const result = await addUser(newUser);
+//     console.log('result', result);
+//     if (result) {
+//       if (result.error) {
+//         res.status(500).json({message: "error"});
+//         return;
+//       } 
+//       res.status(201).json({message: "New user added.", ...result});
       
-    } else {
-      res.status(400).json({message: "Missing data"});
-    }
-    }
+//     } else {
+//       res.status(400).json({message: "Missing data"});
+//     }
+//     }
 		
-}
+// }
 
 const putUser = (req, res) => {
   console.log('user id', req.params.id);

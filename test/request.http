@@ -1,8 +1,3 @@
-### POST /api/auth/login
-POST http://127.0.0.1:3000/api/auth/login
-content-type: application/json
-{"username": "JohnDoe", "password": "to-be-hashed-pw1"}
-
 ## auth/login
 ### POST /api/auth/login
 POST http://localhost:3000/api/auth/login
@@ -12,83 +7,130 @@ content-type: application/json
 
 ### GET my user info
 GET http://localhost:3000/api/auth/me
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6IkpvaG5Eb2UiLCJlbWFpbCI6ImpvaG5kb2VAZXhhbXBsZS5jb20iLCJ1c2VyX2xldmVsX2lkIjoyLCJpYXQiOjE3MDA2NDQ2MDB9.cN_OM_OQGBN3ldQP0fWhMJVl3Fvm7_rmVz481w2rTr4
 
-### GET /api/media
-GET http://127.0.0.1:3000/api/media
+### GET /kukkuu
+GET http://localhost:3000/kukkuu
 
-### GET /api/media/:id
-GET http://127.0.0.1:3000/api/media/3
+### GET /something-else
+GET http://localhost:3000/morjes
 
-### POST /api/media
-POST http://127.0.0.1:3000/api/media
-Content-Type: application/json
+# Media sharing api http test requests
 
-{
-  "filename": "60ac.jpg",
-  "filesize": 20000,
-  "title": "New image",
-  "description": "The description of the new image",
-  "user_id": 305,
-  "media_type": "image/jpeg"
-}
+## /api/media endpoit
 
-### POST /api/media error
-POST http://127.0.0.1:3000/api/media
-Content-Type: application/json
+### Get all media
+GET http://localhost:3000/api/media
 
-{
-  "filename": "60ac.jpg",
-  "filesize": 20000
-}
+### Get media by id
+GET http://localhost:3000/api/media/3
 
-### PUT /api/media/:id
-PUT http://127.0.0.1:3000/api/media/1
-Content-Type: application/json
+### Get media by id FAIL
+GET http://localhost:3000/api/media/959099
 
-{
-  "title": "Basement modified",
-  "description": "Some new description"
-}
+### Post media 
+POST http://localhost:3000/api/media
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6IkpvaG5Eb2UiLCJlbWFpbCI6ImpvaG5kb2VAZXhhbXBsZS5jb20iLCJ1c2VyX2xldmVsX2lkIjoyLCJpYXQiOjE3MDA2NDQ2MDB9.cN_OM_OQGBN3ldQP0fWhMJVl3Fvm7_rmVz481w2rTr4
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
-### DELETE /api/media/:id
-DELETE http://127.0.0.1:3000/api/media/1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="title"
 
+New media title k
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="image.jpg"
+Content-Type: image/jpeg
 
+< ./cat.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
-### GET /api/user
-GET http://127.0.0.1:3000/api/user
+### Post media (invalid file)
+POST http://localhost:3000/api/media
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6IkpvaG5Eb2UiLCJlbWFpbCI6ImpvaG5kb2VAZXhhbXBsZS5jb20iLCJ1c2VyX2xldmVsX2lkIjoyLCJpYXQiOjE3MDA2NDQ2MDB9.cN_OM_OQGBN3ldQP0fWhMJVl3Fvm7_rmVz481w2rTr4
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="title"
 
-### GET /api/user/:id
-GET http://127.0.0.1:3000/api/user/260
+New media title k
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="file.pdf"
+Content-Type: application/pdf
 
+< ./cat.pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
-### POST /api/user
-POST http://127.0.0.1:3000/api/user
-Content-Type: application/json
+### Post media FAIL
+POST http://localhost:3000/api/media
+content-type: application/json
 
-{
-  "username": "VCHar1223456",
-  "password": "hello",
-  "email": "vchar1223456@example.com",
-  "user_level_id": 1
-}
+{"msg": "HEllo"}
 
-### PUT /api/user/:id
-PUT http://127.0.0.1:3000/api/user/260
-Content-Type: application/json
+### Update media
+PUT http://localhost:3000/api/media/9590
+content-type: application/json
 
 {
-  "username": "Test",
-  "email": "vchar@example.com",
-  "user_level_id": 2
+  "filename": "updated.jpg",
+  "title": "Updated Media",
+  "description": "updated description",
 }
 
-### DELETE /api/user/:id
-DELETE http://127.0.0.1:3000/api/user/260
+### Update media FAIL
+PUT http://localhost:3000/api/media/260
+content-type: application/json
 
+{
+  "something": "this will fail",
+}
 
+### Delete media
+DELETE http://localhost:3000/api/media/9590
 
+## /api/users endpoint
 
+### Get all users
+GET http://localhost:3000/api/users
 
+### Get user by id
+GET http://localhost:3000/api/users/260
+
+### Get user by id FAIL
+GET http://localhost:3000/api/users/959099
+
+### Post users / user registration
+POST http://localhost:3000/api/users
+content-type: application/json
+
+{
+  "username": "sfdsfadsf",
+  "password": "nt",
+  "email": "nexuuss@imaili"
+}
+
+### Post users FAIL
+POST http://localhost:3000/api/users
+content-type: application/json
+
+{"msg": "HEllo"}
+
+### Update user
+PUT http://localhost:3000/api/users/260
+content-type: application/json
+
+{
+  "username": "Newuser",
+  "password": "newsecret",
+  "email": "newuser@example.com"
+}
+
+### Update users FAIL
+PUT http://localhost:3000/api/users/340
+content-type: application/json
+
+{
+  "something": "this will fail",
+}
+
+### Delete users
+DELETE http://localhost:3000/api/users/260

@@ -16,7 +16,7 @@ const postLogin = async (req, res) => {
 	
 };
 
-// k lähettää tokeni, mitä k tiedot sitä vastaan, onko token valid,
+// käyttäjä lähettää tokeni, mitä käyttäjä tiedot sitä vastaan, onko token valid,
 // haetaan tiedot 
 const getMe = (req, res) => {
 	console.log('getMe', req.user);

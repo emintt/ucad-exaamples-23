@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator";
 import { deleteMediaItemById, fetchAllMedia, fetchMediaById } from "../models/media-model.mjs";
 
 
@@ -39,20 +40,35 @@ const getMediaById = async (req, res) => {
 //   }
 // }
 
-const postMediaItem = async(req, res) => {
-  console.log('uploaded file', req.file);
-  console.log('uploaded form data', req.body);
+const postMediaItem = async(req, res, next) => {
+  // console.log('uploaded file', req.file);
+  // console.log('uploaded form data', req.body);
+  // if (!req.file) {
+  //   const error = new Error('file missing or invalid');
+  //   error.status = 400;
+  //   return next(error);
+  //   // return res.status(400).json({message: 'file missing or invalid'});
+  // }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    const error = new Error('finvalid input fileds');
+    error.status = 400;
+    return next(error);
+    // return res.status(400).json({message: 'invalid input fields'});
+  }
   const {title, description} = req.body;
   const {filename, mimetype, size} = req.file;
   // req.user is added by authenticateToken middleware
   const user_id = req.user.user_id;
-  if (user_id && filename && title) {
-    const newMedia = [title, description, user_id, filename, mimetype, size];
-    const result = await addMedia(newMedia);
-    res.status(201).json({message: "New item added.", ...result});
-  } else {
-    res.status(400).json({message: "Missing data"});
+  // TODO: add error handling
+  const newMedia = [title, description, user_id, filename, mimetype, size];
+  const result = await addMedia(newMedia);
+  if (result.error) {
+    return next(new Error(result.error));
   }
+  res.status(201).json({message: "New item added.", ...result});
+
 }
 
 const putMediaItem = (req, res) => {
