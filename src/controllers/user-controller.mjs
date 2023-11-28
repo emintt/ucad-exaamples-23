@@ -1,6 +1,6 @@
 // import users from '../mock-data/users.json' assert {type:'json'};
 
-import { addUser, fetchAllUsers, fetchUser } from "../models/user-model.mjs";
+import { addUser, fetchAllUsers, fetchUser, updateUser } from "../models/user-model.mjs";
 
 
 const getUser = async (req, res) => {
@@ -61,28 +61,35 @@ const postUser = async (req, res) => {
 		
 }
 
-const putUser = (req, res) => {
-  console.log('user id', req.params.id);
-  console.log('request body', req.body);
-  const user = users.find((element) => element.user_id === parseInt(req.params.id));
-  // check if request body valid
-  // if user exists, edit it, otherwise send 404 
-  if (req.body.user_id || req.body.username || req.body.password || req.body.email
-    || req.body.user_level_id) {
-    if (user) {
-      user.username = req.body?.username ?? user.username,
-      user.password = req.body?.password ?? user.password,
-      user.email = req.body?.email ?? user.email,
-      user.user_level_id = req.body?.user_level_id ?? user.user_level_id,
-      user.created_at = user.created_at,
-
-      res.json({message: "user updated"});
+const putUser = async (req, res) => {
+  if (req.user) {
+    const auth_user_id = req.user.user_id;
+    const client_user_id = req.params.id;
+    console.log('auth_user_id', auth_user_id);
+    console.log('req user id', req.params.id);
+    console.log('request body', req.body);
+    // const username = 'hihi', password = '', email = '';
+    if (parseInt(req.params.id) !== auth_user_id) {
+      res.status(401).json({message: 'Wrong uer.'});
     } else {
-      res.status(404).json({message: "user not found"});
-    }  
+      // if username password in used?
+      const {username, password, email} = req.body;
+      if (username || password || email) {
+        const updatedUser = {username,password, email, auth_user_id, client_user_id};
+        const result = await updateUser(updatedUser);
+      if (result.error) {
+        res.sendStatus(500);
+      } 
+      res.status(201).json({message: 'user updated.', ...result});
+    } else {
+      res.status(400).json({message: "missing data"});
+    }
+    }
+    
   } else {
-    res.status(400).json({message: "missing data"});
-  }
+	  res.sendStatus(401);
+	}
+  
 }
 
 const deleteUser = (req, res) => {

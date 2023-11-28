@@ -1,8 +1,11 @@
-### POST /api/auth/login
-POST http://127.0.0.1:3000/api/auth/login
+### Post login
+POST http://localhost:3000/api/auth/login
 content-type: application/json
-{"username": "JohnDoe", "password": "to-be-hashed-pw1"}
 
+{
+  "username": "JaneSmith",
+  "password": "to-be-hashed-pw2"
+}
 ## auth/login
 ### POST /api/auth/login
 POST http://localhost:3000/api/auth/login
@@ -12,7 +15,7 @@ content-type: application/json
 
 ### GET my user info
 GET http://localhost:3000/api/auth/me
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6IkpvaG5Eb2UiLCJ1c2VyX2xldmVsX2lkIjoyLCJpYXQiOjE3MDEwNDMwNzh9.qOxYbq6dG4SEQ4nsl2tBhOiaBES331JIgCpgrTWs-E0
 
 ### GET /api/media
 GET http://127.0.0.1:3000/api/media
@@ -76,7 +79,7 @@ Content-Type: application/json
 }
 
 ### PUT /api/user/:id
-PUT http://127.0.0.1:3000/api/user/260
+PUT http://127.0.0.1:3000/api/user/2
 Content-Type: application/json
 
 {
@@ -87,6 +90,26 @@ Content-Type: application/json
 
 ### DELETE /api/user/:id
 DELETE http://127.0.0.1:3000/api/user/260
+
+### POST media
+
+POST http://localhost:3000/api/media
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="title"
+
+New media title
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="user_id"
+
+1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="image.jpg"
+Content-Type: image/jpeg
+
+< ./image.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 
 
