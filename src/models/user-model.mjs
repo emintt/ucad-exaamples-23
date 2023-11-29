@@ -30,14 +30,16 @@ const addUser = async (user) => {
  * @param {object} userCreds - Contains {ussername, password} properties
  * @returns user object
  */
-const login = async (userCreds) => {
+const login = async (username) => {
   try {
+    // pitää sisältää salasana
     // mitä tarvitaan tietokannasta ja mitä tarvitaan tallentaa tokenina
-		const sql = `SELECT user_id, username, user_level_id FROM Users WHERE username = ? AND password = ?`;
-		const params = [userCreds.username, userCreds.password];
+		const sql = `SELECT user_id, username, password, user_level_id FROM Users WHERE username = ?`;
+		const params = [username];
     const result = await promisePool.query(sql, params);
     const [rows] = result;
     console.log('rows', rows);
+    console.log('login, user found', rows[0]);
     return rows[0];
   } catch (e) {
     console.error('error', e.message);

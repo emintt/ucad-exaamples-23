@@ -15,6 +15,8 @@ const __dirname = path.dirname(__filename);
 
 app.set('view engine', 'pug');
 app.set('views', 'src/views');
+// 
+app.disable('x-powered-by');
 
 // parse incomiing JSON data from http requests
 app.use(express.json());

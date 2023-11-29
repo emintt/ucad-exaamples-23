@@ -1,17 +1,37 @@
 
 import { validationResult } from "express-validator";
 import { addUser, fetchAllUsers, fetchUser } from "../models/user-model.mjs";
+import bcrypt from 'bcryptjs';
 
 
 const postUser = async (req, res) => {
   const errors = validationResult(req);
-  if(!errors.isEmpty()) {
-    console.log(errors.array());
+  if (!errors.isEmpty()) {
+    // details about errors:
+    console.log(errors.array())
     return res.status(400).json({message: 'invalid input fields'});
   }
-  const newUserId = await addUser(req.body);
-  res.json({message: 'user added', user_id: newUserId});
-}
+  const newUser = req.body;
+  const salt = await bcrypt.genSalt(10);
+  const hassedPassword = await(bcrypt.hash(newUser.password, salt));
+  console.log('post user', newUser);
+    // korvataan password
+    newUser.password = hassedPassword;
+   const newUserId = await(addUser(newUser));
+
+  // hashedPassword : password (on jälkeen kun validatori läpi)
+  res.status(201).json({message: 'user added', user_id: newUserId});
+};
+
+// const postUser = async (req, res) => {
+//   const errors = validationResult(req);
+//   if(!errors.isEmpty()) {
+//     console.log(errors.array());
+//     return res.status(400).json({message: 'invalid input fields'});
+//   }
+//   const newUserId = await addUser(req.body);
+//   res.json({message: 'user added', user_id: newUserId});
+// }
 
 const getUser = async (req, res) => {
   const users = await fetchAllUsers();

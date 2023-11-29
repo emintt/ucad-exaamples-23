@@ -1,9 +1,19 @@
+### Post users / user registration
+POST http://localhost:3000/api/user
+content-type: application/json
+
+{
+  "username": "sfdsfsasdsf",
+  "password": "ns!@1cddsst",
+  "email": "nexsuss@imaisli.com"
+}
+
 ## auth/login
 ### POST /api/auth/login
 POST http://localhost:3000/api/auth/login
 content-type: application/json
 
-{"username": "JohnDoe", "password": "to-be-hashed-pw1"}
+{"username": "aJohnDoe", "password": "to-be-hashed-pw1"}
 
 ### GET my user info
 GET http://localhost:3000/api/auth/me
@@ -134,3 +144,4 @@ content-type: application/json
 
 ### Delete users
 DELETE http://localhost:3000/api/users/260
+
