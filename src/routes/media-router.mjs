@@ -13,20 +13,21 @@ import { body } from "express-validator";
 
 const mediaRouter = express.Router();
 // upload folder destination is relative to pkg.json
-// const upload = multer({ dest: 'uploads/'});
-
+// const upload = multer({ dest: 'uploads/'}); -> upload config now in mw upload.mjs
+ 
 
 // TODO: check and authentication where needed
+// routes for /api/media
 mediaRouter.route('/')
 	.get(getMedia)
 	// form käsittelyn varten (multer), multer palauttaa req.body, req.file
 	// req.body on olemassa sen jälkeen kun käyttä multer
 	.post(
 		authenticateToken, 
-		upload.single('file'), 
-		// TODO: add missing validation rules
-		body('title').trim().isLength({min: 3}), 
-		body('description'), 
+		upload.single('file'),
+		body('title').trim().isLength({min: 3, max: 50}), 
+		body('description').optional().isLength({max: 255}), 
+		body('file'), 
 		postMediaItem);
 mediaRouter.route('/:id')
 	.get(getMediaById)

@@ -99,11 +99,11 @@ GET http://localhost:3000/api/users/260
 GET http://localhost:3000/api/users/959099
 
 ### Post users / user registration
-POST http://localhost:3000/api/users
+POST http://localhost:3000/api/user
 content-type: application/json
 
 {
-  "username": "sfdsfadsf",
+  "username": "fadsf",
   "password": "nt",
   "email": "nexuuss@imaili"
 }

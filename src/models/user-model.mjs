@@ -19,7 +19,7 @@ const addUser = async (user) => {
     console.error('error', e.message);
     return {error: e.message};
   }
-}
+};
 
 
 
@@ -70,19 +70,28 @@ const fetchUser = async (id) => {
   }
 }
 
-// const addUser = async (newUser) => {
-//   const {username, password, user_level_id, email} = newUser;
-//   const sql = `INSERT INTO Users (username, password, email, user_level_id) 
-//   VALUES (?, ?, ?, ?);`
-//   const params = [username, password, email, user_level_id];
-//   console.log(sql);
-//   try {
-//     const [rows] = await promisePool.query(sql, params);
-//     return {user_id: rows.insertId};
-//     } catch (e) {
-//     console.error('error', e.message);
-//     return {error: e.message};
-//   }
-// }
 
-export {fetchAllUsers, fetchUser, addUser, login};
+const updateUser = async (user) => {
+  const {username,password, email, client_user_id} = user;
+  // const sql = `UPDATE Users 
+  //   SET username = COALESCE(NULLIF(?, ''), username), 
+  //   password = COALESCE(NULLIF(?, ''), password), email = COALESCE(NULLIF(?, ''), email)
+  //   WHERE user_id = ?`;
+  const sql = `UPDATE Users 
+  SET username = COALESCE(?, username), 
+  password = COALESCE(?, password), email = COALESCE(?, email)
+  WHERE user_id = ?`;
+	// laittaa järjestyksessä (? ? ? ?...)
+  const params = [username, password, email, client_user_id];
+  try {
+    const rows = await promisePool.query(sql, params);
+    console.log('rows', rows);
+    return rows;
+  } catch (e) {
+    console.error('error', e.message);
+    return {error: e.message};
+  }
+}
+
+
+export {fetchAllUsers, fetchUser, addUser, login, updateUser};

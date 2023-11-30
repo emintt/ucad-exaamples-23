@@ -4,6 +4,7 @@ import { body } from 'express-validator';
 
 const userRouter = express.Router();
 
+// routes for /api/users
 userRouter.route('/')
   .get(getUser)
 	.post(
