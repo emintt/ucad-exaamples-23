@@ -9,13 +9,15 @@ const upload = multer({
     // allow only images and videos
     if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
       // accept file
+      console.log('multer upload', file);
       cb(null, true);
     } else {
       // reject file
       // copied from media-controller postMediaItem
       const error = new Error('file missing or invalid');
       error.status = 400;
-      cb(null, false);
+      // pass the error to the error handler middleware 
+      cb(error, false);
     }
   },
 });

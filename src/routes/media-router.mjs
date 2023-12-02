@@ -31,6 +31,12 @@ mediaRouter.route('/')
 		postMediaItem);
 mediaRouter.route('/:id')
 	.get(getMediaById)
-	.put(putMediaItem)
+	.put(
+		authenticateToken, 
+		upload.single('file'),
+		body('title').optional().trim().isLength({min: 3, max: 50}), 
+		body('description').optional().isLength({max: 255}), 
+		body('file').optional(), 
+		putMediaItem)
 	.delete(deleteMediaItem);
 export default mediaRouter;

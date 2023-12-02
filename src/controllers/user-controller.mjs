@@ -1,17 +1,23 @@
 
 import { validationResult } from "express-validator";
-import { addUser, fetchAllUsers, fetchUser } from "../models/user-model.mjs";
+import { addUser, fetchAllUsers, fetchUser, updateUser } from "../models/user-model.mjs";
 
 
-const postUser = async (req, res) => {
+const postUser = async (req, res, next) => {
   // validation errors can be retrieved from the request object 
   //(added by express-validator middleware)
   const errors = validationResult(req);
   if(!errors.isEmpty()) {
-    console.log(errors.array());
-    return res.status(400).json({message: 'invalid input fields'});
+    // pass the error to the error handler middleware
+    const error = new Error('invalid input fields');
+    error.status = 400;
+    return next(error);
   }
   const newUserId = await addUser(req.body);
+  // jos tietokannassta tulee errori (default on 500, ei tarvitse kirjoittaa tähän)
+  if (newUserId.error) {
+    return next(new Error(newUserId.error));
+  }
   res.json({message: 'user added', user_id: newUserId});
 }
 
@@ -28,71 +34,81 @@ const getUserById = async (req, res) => {
   if (result) {
     if(result.error) {
       // serverilla on error
-      res.status(500);
+      next(new Error(result.error));
     }
     res.json(result);
   } else {
-    res.status(404);
-    res.json({message: "user not found"});
-  }
-}
-const postMediaItem = async(req, res) => {
-  console.log('uploaded file', req.file);
-  console.log('uploaded form data', req.body);
-  const {title, description, user_id} = req.body;
-  const {filename, mimetype, size} = req.file;
-  // check id of the last item in items and add 1   
-  // const newId = mediaItems[0].media_id + 1;
-  if (user_id && filename && title) {
-    const newMedia = [title, description, user_id, filename, mimetype, size];
-    const result = await addMedia(newMedia);
-    res.status(201).json({message: "New item added.", ...result});
-  } else {
-    res.status(400).json({message: "Missing data"});
+    const error = new Error('user not found');
+    error.status = 404;
+    return next(error);
+    // res.status(404);
+    // res.json({message: "user not found"});
   }
 }
 
-
-const putUser = (req, res) => {
-  console.log('user id', req.params.id);
-  console.log('request body', req.body);
-  const user = users.find((element) => element.user_id === parseInt(req.params.id));
-  // check if request body valid
-  // if user exists, edit it, otherwise send 404 
-  if (req.body.user_id || req.body.username || req.body.password || req.body.email
-    || req.body.user_level_id) {
-    if (user) {
-      user.username = req.body?.username ?? user.username,
-      user.password = req.body?.password ?? user.password,
-      user.email = req.body?.email ?? user.email,
-      user.user_level_id = req.body?.user_level_id ?? user.user_level_id,
-      user.created_at = user.created_at,
-
-      res.json({message: "user updated"});
+const putUser = async (req, res, next) => {
+  // logged user 
+  if (req.user) {
+    const auth_user_id = req.user.user_id;
+    const client_user_id = req.params.id;
+    console.log('auth_user_id', auth_user_id);
+    console.log('req user id', req.params.id);
+    console.log('request body', req.body);
+    // const username = 'hihi', password = '', email = '';
+    if (parseInt(req.params.id) !== auth_user_id) {
+      res.status(401).json({message: 'Wrong uer.'});
     } else {
-      res.status(404).json({message: "user not found"});
-    }  
+       // validationResult catch error from express validatormw
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        console.log(errors.array());
+        const error = new Error('finvalid input fileds'); 
+        error.status = 400;
+        return next(error);
+        // return res.status(400).json({message: 'invalid input fields'});
+      }
+      // if username password in used?
+      const {username, password, email} = req.body;
+      if (username || password || email) {
+        const updatedUser = {username,password, email, auth_user_id, client_user_id};
+        const result = await updateUser(updatedUser);
+      if (result.error) {
+        res.sendStatus(500);
+      } 
+      res.status(201).json({message: 'user updated.', ...result});
+    } else {
+      res.status(400).json({message: "missing data"});
+    }
+    }
+    
   } else {
-    res.status(400).json({message: "missing data"});
-  }
+	  res.sendStatus(401);
+	}
+  
 }
 
-const deleteUser = (req, res) => {
-  // if user with id exists, delete it, otherwise send 404
-  console.log('user id', req.params.id);
-  const userIndex = users.findIndex((elememt) => elememt.user_id === parseInt(req.params.id));
-  console.log(userIndex);
-  if (userIndex !== -1) {
-    users.splice(userIndex, 1);
-    res.status(202).json({message: "user deleted"});
-  } else {
-    res.status(404).json({message: "user not found"});
-  }
-}
+//       res.json({message: "user updated"});
+//     } else {
+//       res.status(404).json({message: "user not found"});
+//     }  
+//   } else {
+//     res.status(400).json({message: "missing data"});
+//   }
+// }
 
-const getNumberOfUsers = (req, res) => {
-  const quantity = users.length;
-  res.json({message: "number of users", quantity: quantity});
-}
+// const deleteUser = (req, res) => {
+//   // if user with id exists, delete it, otherwise send 404
+//   console.log('user id', req.params.id);
+//   const userIndex = users.findIndex((elememt) => elememt.user_id === parseInt(req.params.id));
+//   console.log(userIndex);
+//   if (userIndex !== -1) {
+//     users.splice(userIndex, 1);
+//     res.status(202).json({message: "user deleted"});
+//   } else {
+//     res.status(404).json({message: "user not found"});
+//   }
+// }
 
-export {getUser, getUserById, postUser, putUser, deleteUser, getNumberOfUsers}
+
+
+export {getUser, getUserById, postUser, putUser}

@@ -43,7 +43,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/media', mediaRouter);
 
 // user endpoints
-app.use('/api/user', userRouter);
+app.use('/api/users', userRouter);
 
 // All other routes => 404 
 app.use(notFoundHandler);

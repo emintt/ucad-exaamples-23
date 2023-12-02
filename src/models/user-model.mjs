@@ -82,7 +82,9 @@ const updateUser = async (user) => {
   password = COALESCE(?, password), email = COALESCE(?, email)
   WHERE user_id = ?`;
 	// laittaa järjestyksessä (? ? ? ?...)
+
   const params = [username, password, email, client_user_id];
+  console.log(params);
   try {
     const rows = await promisePool.query(sql, params);
     console.log('rows', rows);
