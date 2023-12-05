@@ -3,7 +3,7 @@ import { promisePool } from "../../utils/database.mjs";
 
 /**
 * Creates a new user in the database
-* 
+*
 * @param {object} user data
 * @returns {number} - id of the inserted user in db
 */
@@ -11,7 +11,7 @@ const addUser = async (user) => {
   try {
     const sql = `INSERT INTO Users (username, email, password, user_level_id)
                 VALUES (?, ?, ?, ?)`;
-    // user level id defaults to 2 (normal user)                 
+    // user level id defaults to 2 (normal user)
     const params = [user.username, user.email, user.password, 2];
     const result = await promisePool.query(sql, params);
     return result[0].insertId;
@@ -26,18 +26,20 @@ const addUser = async (user) => {
 
 /**
  * Fetch user from database based on user name/password pair
- * 
- * @param {object} userCreds - Contains {ussername, password} properties
+ *
+ * @param username - username
  * @returns user object
  */
-const login = async (userCreds) => {
+const login = async (username) => {
   try {
+    // pitää sisältää salasana, joten voidaan verata user entered pw kans
     // mitä tarvitaan tietokannasta ja mitä tarvitaan tallentaa tokenina
-		const sql = `SELECT user_id, username, user_level_id FROM Users WHERE username = ? AND password = ?`;
-		const params = [userCreds.username, userCreds.password];
+		const sql = `SELECT user_id, username, password, user_level_id FROM Users WHERE username = ?`;
+		const params = [username];
     const result = await promisePool.query(sql, params);
     const [rows] = result;
     console.log('rows', rows);
+    console.log('login, userfound', rows[0]);
     return rows[0];
   } catch (e) {
     console.error('error', e.message);
@@ -73,12 +75,12 @@ const fetchUser = async (id) => {
 
 const updateUser = async (user) => {
   const {username,password, email, client_user_id} = user;
-  // const sql = `UPDATE Users 
-  //   SET username = COALESCE(NULLIF(?, ''), username), 
+  // const sql = `UPDATE Users
+  //   SET username = COALESCE(NULLIF(?, ''), username),
   //   password = COALESCE(NULLIF(?, ''), password), email = COALESCE(NULLIF(?, ''), email)
   //   WHERE user_id = ?`;
-  const sql = `UPDATE Users 
-  SET username = COALESCE(?, username), 
+  const sql = `UPDATE Users
+  SET username = COALESCE(?, username),
   password = COALESCE(?, password), email = COALESCE(?, email)
   WHERE user_id = ?`;
 	// laittaa järjestyksessä (? ? ? ?...)

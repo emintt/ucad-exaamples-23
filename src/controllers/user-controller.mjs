@@ -1,10 +1,10 @@
 
 import { validationResult } from "express-validator";
 import { addUser, fetchAllUsers, fetchUser, updateUser } from "../models/user-model.mjs";
-
+import bcrypt from 'bcryptjs';
 
 const postUser = async (req, res, next) => {
-  // validation errors can be retrieved from the request object 
+  // validation errors can be retrieved from the request object
   //(added by express-validator middleware)
   const errors = validationResult(req);
   if(!errors.isEmpty()) {
@@ -13,7 +13,13 @@ const postUser = async (req, res, next) => {
     error.status = 400;
     return next(error);
   }
-  const newUserId = await addUser(req.body);
+  // const newUserId = await addUser(req.body);
+  const newUser = req.body;
+  const salt = await bcrypt.genSalt(10);
+  // replace plain text password with hash
+  newUser.password = await bcrypt.hash(newUser.password, salt);
+  // console.log('postUser', newUser);
+  const newUserId = await addUser(newUser);
   // jos tietokannassta tulee errori (default on 500, ei tarvitse kirjoittaa tähän)
   if (newUserId.error) {
     return next(new Error(newUserId.error));
@@ -47,7 +53,7 @@ const getUserById = async (req, res) => {
 }
 
 const putUser = async (req, res, next) => {
-  // logged user 
+  // logged user
   if (req.user) {
     const auth_user_id = req.user.user_id;
     const client_user_id = req.params.id;
@@ -62,7 +68,7 @@ const putUser = async (req, res, next) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         console.log(errors.array());
-        const error = new Error('finvalid input fileds'); 
+        const error = new Error('finvalid input fileds');
         error.status = 400;
         return next(error);
         // return res.status(400).json({message: 'invalid input fields'});
@@ -74,23 +80,23 @@ const putUser = async (req, res, next) => {
         const result = await updateUser(updatedUser);
       if (result.error) {
         res.sendStatus(500);
-      } 
+      }
       res.status(201).json({message: 'user updated.', ...result});
     } else {
       res.status(400).json({message: "missing data"});
     }
     }
-    
+
   } else {
 	  res.sendStatus(401);
 	}
-  
+
 }
 
 //       res.json({message: "user updated"});
 //     } else {
 //       res.status(404).json({message: "user not found"});
-//     }  
+//     }
 //   } else {
 //     res.status(400).json({message: "missing data"});
 //   }
