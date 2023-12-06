@@ -26,6 +26,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use('/docs', express.static(path.join(__dirname, '../docs')));
+// Serve uploaded mediafiles url: /media/{file}
 app.use('/media', express.static(path.join(__dirname, '../uploads')));
 
 // simpmle custom middleware for logging/debugging all requests

@@ -16,6 +16,7 @@ const getMediaById = async (req, res, next) => {
   const result = await fetchMediaById(req.params.id);
   console.log('request params', req.params);
   // error handling for different scenarios
+  console.log('getmediabyidresult', result);
   if (result) {
     if(result.error) {
       return next(new Error(result.error));
@@ -23,7 +24,7 @@ const getMediaById = async (req, res, next) => {
     res.json(result);
   } else {
     const error = new Error('media item not found');
-    res.status = 400;
+    error.status = 400;
     return next(error);
     // res.status(404).json({message: "media item not found", media_id: req.params.id});
   }
@@ -36,12 +37,12 @@ const postMediaItem = async(req, res, next) => {
     error.status = 400;
     next(error);
     //return res.status(400).json({error: 'Invalid or missing file'})
-  } 
+  }
   // validationResult catch error from express validatormw
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors.array());
-    const error = new Error('finvalid input fileds'); 
+    const error = new Error('finvalid input fileds');
     error.status = 400;
     return next(error);
     // return res.status(400).json({message: 'invalid input fields'});
@@ -73,7 +74,7 @@ const putMediaItem = async(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.log(errors.array());
-      const error = new Error('finvalid input fileds'); 
+      const error = new Error('finvalid input fileds');
       error.status = 400;
       return next(error);
       // return res.status(400).json({message: 'invalid input fields'});
@@ -106,7 +107,7 @@ const putMediaItem = async(req, res, next) => {
     error.status = 401;
     next(error);
 	}
-  
+
 }
 
 

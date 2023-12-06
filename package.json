@@ -7,7 +7,7 @@
   "scripts": {
     "start": "NODE_ENV=production node src/index.js",
     "dev": "nodemon src/index.js",
-    "docs": "apidoc -i src/ -o docs/",
+    "docs": "apidoc -i src/ -o docs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "emintt",
@@ -29,16 +29,18 @@
     "mysql2": "^3.6.3",
     "pug": "^3.0.2"
   },
+  "apidoc": {
+    "title": "My API docs",
+    "url": "https://example.com/api",
+    "order": [
+      "Authentication",
+      "User",
+      "Media"
+    ]
+  },
   "directories": {
     "doc": "docs",
     "test": "test"
-  },
-  "apidoc": {
-    "title": "My API docs",
-    "url": "https://example.com/api/v1",
-    "order": [
-      "Authentication",
-      "User"
-    ]
   }
+
 }

@@ -32,7 +32,7 @@ const getUser = async (req, res) => {
   res.json(users);
 }
 
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
   console.log('user id', req.params.id);
   const result = await fetchUser(req.params.id);
   // const user = users.find((elememt) => elememt.user_id === parseInt(req.params.id));
